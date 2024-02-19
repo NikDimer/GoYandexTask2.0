@@ -1,0 +1,135 @@
+body {
+    width: 100vw;
+    height: 100vh;
+
+    overflow: hidden;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.expressionInput {
+    outline: none;
+    border: 3px solid gray;
+    border-radius: 15px;
+
+    width: 300px;
+    padding: 15px 20px;
+
+    font-size: 18px;
+    text-align: center;
+}
+
+.expressionInput::placeholder {
+    color: gray
+}
+
+.expressionInput:focus::placeholder {
+    color: transparent;
+}
+
+.expressionInput:focus {
+    outline: none;
+    border: 3px solid transparent;
+    background-image: linear-gradient(white, white), linear-gradient(315deg, rgb(236, 160, 255), rgb(170, 178, 255), rgb(132, 255, 201));
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    animation: bg-hue 2s linear infinite;
+}
+
+/* @keyframes for the gradient animation */
+@keyframes bg-hue {
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+
+.sendButton {
+    position: relative;
+    width: 134px;
+    height: 39px;
+
+    background: transparent;
+    border: none;
+
+    cursor: pointer;
+}
+
+.sendButton:before {
+    content: 'Отправить';
+    display: block;
+
+    width: 100px;
+    padding: 10px 15px;
+
+    background: white;
+    border: 2px solid gray;
+    border-radius: 15px;
+
+    transition: opacity 0.3s;
+
+    position: absolute;
+    left: -1px;
+
+    opacity: 1;
+}
+
+.sendButton:hover:before {
+    opacity: 0;
+}
+
+.sendButton:after {
+    content: 'Отправить';
+    display: block;
+
+    width: 100px;
+    padding: 10px 15px;
+
+    background: linear-gradient(white, white) padding-box,
+        linear-gradient(to right, darkblue, darkorchid) border-box;
+    border: 2px solid transparent;
+    border-radius: 15px;
+
+    opacity: 0;
+    transition: opacity 0.3s;
+
+    position: absolute;
+    left: -1px;
+}
+
+.sendButton:hover:after {
+    opacity: 1;
+}
+
+.sendingResponse {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    margin-top: 20px;
+}
+
+.sendingStatus,
+.sendingResponseBody {
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+
+    text-align: center;
+    margin: 0;
+}
+
+.GoodResponse {
+    color: rgb(2, 175, 2)
+}
+
+.BadResponse {
+    color: red
+}

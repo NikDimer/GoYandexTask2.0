@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Список операций</title>
+    <link rel="icon" type="image/x-icon" href="./images/i.webp">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles/menu.css">
+    <link rel="stylesheet" href="styles/operations.css">
+</head>
+
+<body>
+    <div class="menu">
+        <div class="menu_button">
+            <div class="menu_button_line"></div>
+            <div class="menu_button_line"></div>
+            <div class="menu_button_line"></div>
+        </div>
+        <nav class="menu_list">
+            <a href="./index.html">
+                <div class="menu_list_item">Главная</div>
+            </a>
+            <a href="./expressions.html">
+                <div class="menu_list_item">Выражения</div>
+            </a>
+            <a href="./operations.html">
+                <div class="menu_list_item menu_list_item__curent">Операции</div>
+            </a>
+            <a href="./power.html">
+                <div class="menu_list_item">Мощности</div>
+            </a>
+        </nav>
+    </div>
+
+    <div>
+        <h2 class="OperationsTitle">Список операций</h2>
+        <table>
+            <thead>
+                <th>Операция</th>
+                <th>Время выполнения</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>+</td>
+                    <td><input type="text" value="3" id="plus"> сек</td>
+                </tr>
+                <tr>
+                    <td>-</td>
+                    <td><input type="text" value="3" id="minus"> сек</td>
+                </tr>
+                <tr>
+                    <td>*</td>
+                    <td><input type="text" value="3" id="mn"> сек</td>
+                </tr>
+                <tr>
+                    <td>/</td>
+                    <td><input type="text" value="3" id="del"> сек</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <button style="margin-top: 10px; margin-bottom: 10px; cursor: pointer;">Сохранить</button>
+    <p class="info"></p>
+</body>
+<script src="./scripts/menu.js"></script>
+<script>
+    var submit = document.querySelector("button");
+    var InputPlus = document.querySelector("#plus");
+    var InputMinus = document.querySelector("#minus");
+    var InputMn = document.querySelector("#mn");
+    var InputDel = document.querySelector("#del");
+    var info = document.querySelector(".info");
+
+    fetch("http://localhost:8080/options", {
+        method: "OPTIONS",
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    }).then(() => {
+        fetch("http://localhost:8080/operations", {
+            method: "GET",
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            mode: "cors"
+        }).then((response) => {
+            return response.json();
+        }).then(data => {
+            InputPlus.value = data["plus"]
+            InputMinus.value = data["minus"]
+            InputMn.value = data["mn"]
+            InputDel.value = data["del"]
+        })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+
+    submit.addEventListener("click", (event) => {
+        fetch("http://localhost:8080/options", {
+            method: "OPTIONS",
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        }).then(() => {
+            fetch("http://localhost:8080/operations", {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify({
+                    plus: InputPlus.value,
+                    minus: InputMinus.value,
+                    mn: InputMn.value,
+                    del: InputDel.value
+                }),
+                mode: "cors"
+            }).then((response) => {
+                return response.json();
+            }).then(data => {
+                info.textContent = data.ans;
+            })
+                .catch(error => {
+                    console.error(error);
+                });
+        });
+    })
+</script>
+
+</html>

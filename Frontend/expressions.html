@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Список выражений</title>
+    <link rel="icon" type="image/x-icon" href="./images/i.webp">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles/menu.css">
+    <link rel="stylesheet" href="styles/expressions.css">
+</head>
+
+<body>
+    <div class="menu">
+        <div class="menu_button">
+            <div class="menu_button_line"></div>
+            <div class="menu_button_line"></div>
+            <div class="menu_button_line"></div>
+        </div>
+        <nav class="menu_list">
+            <a href="./index.html">
+                <div class="menu_list_item">Главная</div>
+            </a>
+            <a href="./expressions.html">
+                <div class="menu_list_item menu_list_item__curent">Выражения</div>
+            </a>
+            <a href="./operations.html">
+                <div class="menu_list_item">Операции</div>
+            </a>
+            <a href="./power.html">
+                <div class="menu_list_item">Мощности</div>
+            </a>
+        </nav>
+    </div>
+
+    <div>
+        <h2 class="ExpressionsTitle">Список выражений</h2>
+        <table>
+            <thead>
+                <th>Идентификатор</th>
+                <th>Выражение</th>
+                <th>Статус</th>
+                <th>Результат</th>
+                <th>Дата создания</th>
+                <th>Дата завершения</th>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</body>
+<script src="./scripts/menu.js"></script>
+<script>
+    var tBody = document.querySelector("tbody");
+    fetch("http://localhost:8080/options", {
+        method: "OPTIONS",
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    }).then(() => {
+        fetch("http://localhost:8080/expressions", {
+            method: "GET",
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            mode: "cors"
+        }).then((response) => {
+            return response.json();
+        }).then(data => {
+            for (var key in data) {
+                console.log(data[key])
+                tBody.innerHTML = tBody.innerHTML + `
+                <tr>
+                    <td>` + data[key].id + `</td>
+                    <td>` + data[key].expression + `</td>
+                    <td>` + data[key].status + `</td>
+                    <td>` + (data[key].result == "" ? "-" : data[key].result) + `</td>
+                    <td>` + data[key].creationdate + `</td>
+                    <td>` + (data[key].completedate == "" ? "-" : data[key].completedate) + `</td>
+                </tr>
+            `
+            }
+        })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+</script>
+
+</html>

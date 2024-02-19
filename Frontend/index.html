@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Вычислитель выражений</title>
+    <link rel="icon" type="image/x-icon" href="./images/i.webp">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles/index.css">
+    <link rel="stylesheet" href="styles/menu.css">
+</head>
+
+<body>
+    <div class="menu">
+        <div class="menu_button">
+            <div class="menu_button_line"></div>
+            <div class="menu_button_line"></div>
+            <div class="menu_button_line"></div>
+        </div>
+        <nav class="menu_list">
+            <a href="./index.html">
+                <div class="menu_list_item menu_list_item__curent">Главная</div>
+            </a>
+            <a href="./expressions.html">
+                <div class="menu_list_item">Выражения</div>
+            </a>
+            <a href="./operations.html">
+                <div class="menu_list_item">Операции</div>
+            </a>
+            <a href="./power.html">
+                <div class="menu_list_item">Мощности</div>
+            </a>
+        </nav>
+    </div>
+    <div class="form">
+        <input class="expressionInput" type="text" id="expression" placeholder="2 + 2 * 2">
+        <button class="sendButton"></button>
+        <div class="sendingResponse">
+            <p class="sendingStatus"></p>
+            <p class="sendingResponseBody"></p>
+        </div>
+    </div>
+</body>
+
+<script src="./scripts/menu.js"></script>
+<script>
+    var input = document.getElementById("expression");
+    var submit = document.querySelector(".sendButton");
+
+    var sendingStatus = document.querySelector(".sendingStatus");
+    var sendingResponseBody = document.querySelector(".sendingResponseBody");
+
+    submit.addEventListener("click", (e) => {
+        fetch("http://localhost:8080/options", {
+            method: "OPTIONS",
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        }).then(() => {
+            fetch("http://localhost:8080/send", {
+                method: "POST",
+                body: JSON.stringify({
+                    expression: (input.value == "" ? "2+2*2" : input.value.replace(/ /g, ''))
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                },
+                mode: "cors"
+            }).then((response) => {
+                if (response.ok) {
+                    sendingStatus.innerHTML = "<span class='GoodResponse'>Статус: " + response.status.toString() + "</span>"
+                } else {
+                    sendingStatus.innerHTML = "<span class='BadResponse'>Статус: " + response.status.toString() + "</span>"
+                }
+                return response.json();
+            }).then(data => {
+                sendingResponseBody.textContent = data.id
+            })
+                .catch(error => {
+                    console.error(error);
+                });
+        });
+    })
+</script>
+
+</html>
